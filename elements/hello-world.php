@@ -6,7 +6,7 @@
  * @since 1.0
  */
 
-if ( fusion_is_element_enabled( 'hello_world' ) ) {
+if ( fusion_is_element_enabled( 'avada_views_addon' ) ) {
 
 	if ( ! class_exists( 'MyHelloWorld' ) && class_exists( 'Fusion_Element' ) ) {
 		/**
@@ -33,8 +33,12 @@ if ( fusion_is_element_enabled( 'hello_world' ) ) {
 			 */
 			public function __construct() {
 				parent::__construct();
-				add_filter( 'fusion_attr_hello-main-wrapper', [ $this, 'attr' ] );
-				add_shortcode( 'hello_world', [ $this, 'render' ] );
+
+				add_filter( 'fusion_attr_views-addon-wrapper', [ $this, 'attr' ] );
+				add_filter( 'fusion_attr_separator-wrapper', [ $this, 'separator_wrapper_attr' ] );
+				add_filter( 'fusion_attr_content', [ $this, 'content_attr' ] );
+
+				add_shortcode( 'avada_views_addon', [ $this, 'render' ] );
 			}
 
 			/**
@@ -49,8 +53,16 @@ if ( fusion_is_element_enabled( 'hello_world' ) ) {
 				$fusion_settings = fusion_get_fusion_settings();
 
 				return [
-					'color'      => $fusion_settings->get( 'hello_color' ),
-					'background' => $fusion_settings->get( 'hello_background' ),
+					'font_size'   => '',
+					'color'      => $fusion_settings->get( 'fusion_addon_views__color' ),
+					'background' => $fusion_settings->get( 'fusion_addon_views_background_color' ),
+					'content_align' => 'auto',
+					'style_type' => 'none',
+					'padding_bottom'           => '',
+					'padding_left'             => '',
+					'padding_right'            => '',
+					'padding_top'              => '',
+					'separator_color'              => '',
 				];
 			}
 
@@ -64,8 +76,9 @@ if ( fusion_is_element_enabled( 'hello_world' ) ) {
 			 */
 			public static function settings_to_params() {
 				return [
-					'hello_color'      => 'color',
-					'hello_background' => 'background',
+					'fusion_addon_views_content' => 'element_content',
+					'fusion_addon_views_color'      => 'color',
+					'fusion_addon_views_background_color' => 'background',
 				];
 			}
 
@@ -94,7 +107,7 @@ if ( fusion_is_element_enabled( 'hello_world' ) ) {
 			}
 
 			/**
-			 * Render the shortcode
+			 * Render the shortcode.
 			 *
 			 * @access public
 			 * @since 1.0
@@ -103,16 +116,36 @@ if ( fusion_is_element_enabled( 'hello_world' ) ) {
 			 * @return string          HTML output.
 			 */
 			public function render( $args, $content = '' ) {
-
-				$defaults   = FusionBuilder::set_shortcode_defaults( self::get_element_defaults(), $args, 'hello_world' );
+				$defaults   = FusionBuilder::set_shortcode_defaults( self::get_element_defaults(), $args, 'avada_views_addon' );
 				$this->args = $defaults;
 
-				$html  = '<div ' . FusionBuilder::attributes( 'hello-main-wrapper' ) . '>';
+				$content = preg_replace( '/%total_views%/', '32342', $content);
+				$content = preg_replace( '/%today_views%/', '32', $content);
+
+				$html = '';
+
+				if ( false !== strpos( $this->args['style_type'], 'double' ) || false !== strpos( $this->args['style_type'], 'single' ) ) {
+					if(!empty($this->args['separator_color'])) {
+ 						$html .= '<style>.avada-views-addon-decoration::before,.avada-views-addon-decoration::after{border-color:' . $this->args['separator_color'] . ';</style>';
+					}
+				} elseif(false !== strpos( $this->args['style_type'], 'underline' )) {
+					$styles = explode( ' ', $this->args['style_type'] );
+					$border_bottom_color = $this->args['separator_color'];
+
+					if ( isset( $styles[1] ) && in_array( $styles[1], array( 'dashed', 'dotted', 'solid' ) ) ) {
+						$html .= '<style>.avada-views-addon-wrapper{border-bottom: 1px ' . $styles[1] . $border_bottom_color . ';}</style>';
+					}
+				}
+
+				$html .= '<div ' . FusionBuilder::attributes( 'views-addon-wrapper' ) . '>';
+				$html .= '<div ' . FusionBuilder::attributes( 'separator-wrapper' ) . '>';
+				$html .= '<div ' . FusionBuilder::attributes( 'content' ) . '>';
 				$html .= wpautop( $content, false );
+				$html .= '</div>';
+				$html .= '</div>';
 				$html .= '</div>';
 
 				return $html;
-
 			}
 
 			/**
@@ -124,9 +157,69 @@ if ( fusion_is_element_enabled( 'hello_world' ) ) {
 			 */
 			public function attr() {
 				$attr = [
-					'class' => 'my-hello-world',
-					'style' => 'color: ' . $this->args['color'] . '; background-color:' . $this->args['background'],
+					'class' => 'avada-views-addon-wrapper',
+					'style' => 'color: ' . $this->args['color'] . '; background-color:' . $this->args['background'] . ';',
 				];
+
+				if( $this->args['content_align'] && $this->args['content_align'] !== 'auto' ) {
+					$attr['style'] .= 'text-align:' . $this->args['content_align'] . ';';
+				}
+
+				if( $this->args['font_size'] && $this->args['font_size'] !== 'auto' ) {
+					$attr['style'] .= 'font-size:' . $this->args['font_size'] . ';';
+				}
+
+				if( $this->args['padding_top'] ) {
+					$attr['style'] .= 'padding-top:' . $this->args['padding_top'] . ';';
+				}
+
+				if( $this->args['padding_bottom'] ) {
+					$attr['style'] .= 'padding-bottom:' . $this->args['padding_bottom'] . ';';
+				}
+
+				if( $this->args['padding_left'] ) {
+					$attr['style'] .= 'padding-left:' . $this->args['padding_left'] . ';';
+				}
+
+				if( $this->args['padding_right'] ) {
+					$attr['style'] .= 'padding-right:' . $this->args['padding_right'] . ';';
+				}
+
+				return $attr;
+			}
+
+			/**
+			 * Builds the attributes for the separator wrapper.
+			 *
+			 * @return array
+			 */
+			public function separator_wrapper_attr() {
+				$attr = [];
+
+				if ( false !== strpos( $this->args['style_type'], 'double' ) || false !== strpos( $this->args['style_type'], 'single' ) ) {
+					$styles = explode( ' ', $this->args['style_type'] );
+					$styles = implode( '-', $styles );
+
+					$class_name = 'avada-views-addon-decoration avada-views-addon-decoration--' . $styles;
+					$attr['class'] .= $class_name;
+				}
+
+				return $attr;
+			}
+
+			/**
+			 * Builds the attributes for the separator wrapper.
+			 *
+			 * @return array
+			 */
+			public function content_attr() {
+				$attr = [];
+
+				if ( false !== strpos( $this->args['style_type'], 'double' ) || false !== strpos( $this->args['style_type'], 'single' ) ) {
+					$attr['style'] = 'display: inline-flex;flex-wrap: wrap;flex-direction: column;';
+				}
+
+				$attr['class'] = 'avada-views-addon-content';
 
 				return $attr;
 			}
@@ -140,27 +233,35 @@ if ( fusion_is_element_enabled( 'hello_world' ) ) {
 			 */
 			public function add_options() {
 				return [
-					'hello_world_shortcode_section' => [
-						'label'       => esc_attr__( 'Hello World', 'hello-world' ),
+					'avada_views_addon_shortcode_section' => [
+						'label'       => esc_attr__( 'Views Counter', 'avada-views-addon' ),
 						'description' => '',
-						'id'          => 'hello_world_shortcode_section',
+						'id'          => 'avada_views_addon_shortcode_section',
 						'default'     => '',
-						'icon'        => 'fusiona-exclamation-triangle',
+						'icon'        => 'fusiona-eye',
 						'type'        => 'accordion',
 						'fields'      => [
-							'hello_color' => [
-								'label'       => esc_attr__( 'Hello World Text Color', 'hello-world' ),
-								'description' => esc_attr__( 'Set the text color global for hello world.', 'hello-world' ),
-								'id'          => 'hello_color',
-								'default'     => '#333333',
+							'fusion_addon_views_content' => [
+								'label'       => esc_attr__( 'Content', 'avada-views-addon' ),
+								'description' => esc_attr__( 'Text to display among the views. Use %total_views% or %today_views% to show the total/daily views.', 'avada-views-addon' ),
+								'id'          => 'fusion_addon_views_content',
+								'default'     => esc_attr__( 'Total views: %total_views%. Daily views: %today_views%', 'avada-views-addon' ),
+								'type'        => 'text',
+								'transport'   => 'postMessage',
+							],
+							'fusion_addon_views_color' => [
+								'label'       => esc_attr__( 'Text Color', 'avada-views-addon' ),
+								'description' => esc_attr__( 'Set the global text color.', 'avada-views-addon' ),
+								'id'          => 'fusion_addon_views_color',
+								'default'     => '',
 								'type'        => 'color-alpha',
 								'transport'   => 'postMessage',
 							],
-							'hello_background' => [
-								'label'       => esc_attr__( 'Hello World Background Color', 'hello-world' ),
-								'description' => esc_attr__( 'Set the background color global for hello world.', 'hello-world' ),
-								'id'          => 'hello_background',
-								'default'     => '#ffa737',
+							'fusion_addon_views_background_color' => [
+								'label'       => esc_attr__( 'Background Color', 'hello-world' ),
+								'description' => esc_attr__( 'Set the global background color.', 'hello-world' ),
+								'id'          => 'fusion_addon_views_background_color',
+								'default'     => '',
 								'type'        => 'color-alpha',
 								'transport'   => 'postMessage',
 							],
@@ -211,9 +312,18 @@ if ( fusion_is_element_enabled( 'hello_world' ) ) {
  *
  * @since 1.0
  */
-function hello_world_map() {
+function avada_views_addon_map() {
 
 	$fusion_settings = fusion_get_fusion_settings();
+
+	$is_builder = ( function_exists( 'fusion_is_preview_frame' ) && fusion_is_preview_frame() ) || ( function_exists( 'fusion_is_builder_frame' ) && fusion_is_builder_frame() );
+	$to_link    = '';
+
+	if ( $is_builder ) {
+		$to_link = '<span class="fusion-panel-shortcut" data-fusion-option="headers_typography_important_note_info">' . esc_html__( 'Global Options Heading Settings', 'fusion-builder' ) . '</span>';
+	} else {
+		$to_link = '<a href="' . esc_url( $fusion_settings->get_setting_link( 'headers_typography_important_note_info' ) ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Global Options Heading Settings', 'fusion-builder' ) . '</a>';
+	}
 
 	fusion_builder_map(
 		fusion_builder_frontend_data(
@@ -221,9 +331,9 @@ function hello_world_map() {
 			// Class reference.
 			'MyHelloWorld',
 			[
-				'name'                     => esc_attr__( 'Hello World', 'hello-world' ),
-				'shortcode'                => 'hello_world',
-				'icon'                     => 'fusiona-exclamation-triangle',
+				'name'                     => esc_attr__( 'Views Counter', 'avada-views-addon' ),
+				'shortcode'                => 'avada_views_addon',
+				'icon'                     => 'fusiona-eye',
 
 				// View used on front-end.
 				'front_end_custom_settings_view_js' => SAMPLE_ADDON_PLUGIN_URL . 'elements/front-end/hello-world.js',
@@ -240,29 +350,96 @@ function hello_world_map() {
 				'params'                   => [
 					[
 						'type'        => 'tinymce',
-						'heading'     => esc_attr__( 'Content', 'hello-world' ),
-						'description' => esc_attr__( 'Enter some content for this textblock.', 'hello-world' ),
+						'heading'     => esc_attr__( 'Content', 'avada-views-addon' ),
+						'description' => esc_attr__( 'Enter the text to display among the views. Use %total_views% or %today_views% to show the total/daily views.', 'avada-views-addon' ),
 						'param_name'  => 'element_content',
-						'value'       => esc_attr__( 'Click edit button to change this text.', 'hello-world' ),
-						'placeholder' => true,
+						'dynamic_data' => true,
+						'value'       => $fusion_settings->get( 'fusion_addon_views_content' ) ? $fusion_settings->get( 'fusion_addon_views_content' ) : esc_attr__( 'Total views: %total_views%. Daily views: %today_views%', 'avada-views-addon' ),
+					],
+					[
+						'type'        => 'textfield',
+						'heading'     => esc_attr__( 'Font Size', 'fusion-builder' ),
+						/* translators: URL for the link. */
+						'description' => sprintf( esc_html__( 'Controls the font size of the text. Enter value including any valid CSS unit, ex: 20px. Leave empty if the global font size for the corresponding heading size (h1-h6) should be used: %s.', 'fusion-builder' ), $to_link ),
+						'param_name'  => 'font_size',
+						'value'       => '',
+						'group'       => esc_attr__( 'Design', 'fusion-builder' ),
 					],
 					[
 						'type'        => 'colorpickeralpha',
-						'heading'     => esc_attr__( 'Text Color', 'hello-world' ),
-						'description' => esc_attr__( 'Set the text color for the hello.', 'hello-world' ),
+						'heading'     => esc_attr__( 'Text Color', 'avada-views-addon' ),
+						'description' => esc_attr__( 'Set the text color for the hello.', 'avada-views-addon' ),
 						'param_name'  => 'color',
-						'default'     => $fusion_settings->get( 'hello_color' ) ? $fusion_settings->get( 'hello_color' ) : '#fff',
+						'default'     => $fusion_settings->get( 'fusion_addon_views_color' ) ? $fusion_settings->get( 'fusion_addon_views_color' ) : '',
+						'group'       => esc_attr__( 'Design', 'fusion-builder' ),
 					],
 					[
 						'type'        => 'colorpickeralpha',
-						'heading'     => esc_attr__( 'Background Color', 'hello-world' ),
-						'description' => esc_attr__( 'Set the background color for the hello.', 'hello-world' ),
+						'heading'     => esc_attr__( 'Background Color', 'avada-views-addon' ),
+						'description' => esc_attr__( 'Set the background color.', 'avada-views-addon' ),
 						'param_name'  => 'background',
-						'default'     => $fusion_settings->get( 'hello_background' ) ? $fusion_settings->get( 'hello_background' ) : '#333',
+						'default'     => $fusion_settings->get( 'fusion_addon_views_background_color' ) ? $fusion_settings->get( 'fusion_addon_views_background_color' ) : '',
+						'group'       => esc_attr__( 'Design', 'fusion-builder' ),
+					],
+					[
+						'type'        => 'radio_button_set',
+						'heading'     => esc_attr__( 'Alignment', 'fusion-builder' ),
+						'description' => esc_attr__( 'Choose to align the heading left, right or center.', 'fusion-builder' ),
+						'param_name'  => 'content_align',
+						'value'       => [
+							'auto'   => esc_attr__( 'Language Default', 'fusion-builder' ),
+							'left'   => esc_attr__( 'Left', 'fusion-builder' ),
+							'center' => esc_attr__( 'Center', 'fusion-builder' ),
+							'right'  => esc_attr__( 'Right', 'fusion-builder' ),
+						],
+						'default'     => 'auto',
+						'group'       => esc_attr__( 'Design', 'fusion-builder' ),
+					],
+					[
+						'type'             => 'dimension',
+						'remove_from_atts' => true,
+						'heading'          => esc_attr__( 'Padding', 'fusion-builder' ),
+						'description'      => esc_attr__( 'In pixels or percentage, ex: 10px or 10%.', 'fusion-builder' ),
+						'param_name'       => 'padding',
+						'value'            => [
+							'padding_top'    => '',
+							'padding_right'  => '',
+							'padding_bottom' => '',
+							'padding_left'   => '',
+						],
+						'group'            => esc_attr__( 'Design', 'fusion-builder' ),
+					],
+					[
+						'type'        => 'select',
+						'heading'     => esc_attr__( 'Separator', 'fusion-builder' ),
+						'description' => esc_attr__( 'Choose the kind of the title separator you want to use.', 'fusion-builder' ),
+						'param_name'  => 'style_type',
+						'value'       => [
+							'none'          => esc_attr__( 'None', 'fusion-builder' ),
+							'single solid'     => esc_attr__( 'Single Solid', 'fusion-builder' ),
+							'single dashed'    => esc_attr__( 'Single Dashed', 'fusion-builder' ),
+							'single dotted'    => esc_attr__( 'Single Dotted', 'fusion-builder' ),
+							'double solid'     => esc_attr__( 'Double Solid', 'fusion-builder' ),
+							'double dashed'    => esc_attr__( 'Double Dashed', 'fusion-builder' ),
+							'double dotted'    => esc_attr__( 'Double Dotted', 'fusion-builder' ),
+							'underline solid'  => esc_attr__( 'Underline Solid', 'fusion-builder' ),
+							'underline dashed' => esc_attr__( 'Underline Dashed', 'fusion-builder' ),
+							'underline dotted' => esc_attr__( 'Underline Dotted', 'fusion-builder' ),
+						],
+						'default'     => 'none',
+						'group'       => esc_attr__( 'Design', 'fusion-builder' ),
+					],
+					[
+						'type'        => 'colorpickeralpha',
+						'heading'     => esc_attr__( 'Separator Color', 'avada-views-addon' ),
+						'description' => esc_attr__( 'Defaults to text color.', 'fusion-builder' ),
+						'param_name'  => 'separator_color',
+						'default'     => '',
+						'group'       => esc_attr__( 'Design', 'fusion-builder' ),
 					],
 				],
 			]
 		)
 	);
 }
-add_action( 'fusion_builder_before_init', 'hello_world_map' );
+add_action( 'fusion_builder_before_init', 'avada_views_addon_map' );

@@ -1,3 +1,88 @@
-.my-hello-world {
-  padding: 30px;
+.avada-views-addon-wrapper {
+  padding: 10px 20px;
+}
+
+.avada-views-addon-content {
+  overflow: hidden;
+}
+
+.avada-views-addon-content p:last-child{
+  margin-bottom: 0;
+}
+
+.avada-views-addon-wrapper.sep-underline {
+  display: block;
+  padding-bottom: 10px;
+  width: 100%;
+  border-bottom: 1px solid #e7e6e6;
+}
+
+.avada-views-addon-wrapper.sep-underline.sep-dashed {
+  border-bottom-style: dashed;
+}
+
+.avada-views-addon-wrapper.sep-underline.sep-dotted {
+  border-bottom-style: dotted;
+}
+
+
+
+.avada-views-addon-decoration {
+  overflow: hidden;
+}
+
+.avada-views-addon-decoration::before,
+.avada-views-addon-decoration::after {
+  border: 1px solid currentColor;
+  border-left: 0;
+  border-right: 0;
+  content: "";
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  width: 100%;
+}
+
+.avada-views-addon-decoration::before {
+  right: 0.5em;
+  margin-left: -100%;
+}
+
+.avada-views-addon-decoration::after {
+  left: 0.5em;
+  margin-right: -100%;
+}
+
+.avada-views-addon-decoration--single-solid::after,
+.avada-views-addon-decoration--single-solid::before {
+  border-bottom: 0;
+}
+
+.avada-views-addon-decoration--single-dashed::after,
+.avada-views-addon-decoration--single-dashed::before {
+  border-bottom: 0;
+  border-style: dashed;
+}
+
+.avada-views-addon-decoration--single-dotted::after,
+.avada-views-addon-decoration--single-dotted::before {
+  border-bottom: 0;
+  border-style: dotted;
+}
+
+.avada-views-addon-decoration--double-solid::after,
+.avada-views-addon-decoration--double-solid::before {
+  height: 6px;
+}
+
+.avada-views-addon-decoration--double-dashed::after,
+.avada-views-addon-decoration--double-dashed::before {
+  height: 6px;
+  border-style: dashed;
+}
+
+.avada-views-addon-decoration--double-dotted::after,
+.avada-views-addon-decoration--double-dotted::before {
+  height: 6px;
+  border-style: dotted;
 }
