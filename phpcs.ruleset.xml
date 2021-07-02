@@ -11,7 +11,23 @@
 	<description>A custom set of code standard rules to check for WordPress themes and plugins.</description>
 
 	<!-- Include the WordPress ruleset, with exclusions. -->
-	<rule ref="WordPress" />
+		<rule ref="WordPress">
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName" />
+		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
+		<exclude name="WordPress.WP.EnqueuedResourceParameters.MissingVersion" />
+		<exclude name="WordPress.WP.I18n.MissingTranslatorsComment" />
+		<exclude name="WordPress.WP.GlobalVariablesOverride.Prohibited" />
+		<exclude name="WordPress.PHP.DontExtract.extract_extract" />
+
+		<exclude name="Squiz.PHP.DisallowMultipleAssignments.Found" />
+		<exclude name="Squiz.Commenting.FileComment.WrongStyle" />
+		<exclude name="Squiz.Commenting.FileComment.Missing" />
+		<exclude name="Squiz.Commenting.FileComment.MissingPackageTag" />
+		<exclude name="Squiz.Commenting.ClassComment.Missing" />
+
+		<exclude name="Generic.Commenting.Fixme.CommentFound" />
+		<exclude name="Generic.Commenting.Fixme.TaskFound" />
+	</rule>
 	<rule ref="WordPress.Arrays.CommaAfterArrayItem.NoComma">
 		<exclude-pattern>saved-templates/saved-elements.php</exclude-pattern>
 	</rule>

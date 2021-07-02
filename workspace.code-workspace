@@ -9,6 +9,15 @@
 		},
 	],
 	"settings": {
-		"git.ignoreLimitWarning": true
+		"git.ignoreLimitWarning": true,
+
+		"phpSniffer.autoDetect": true,
+		"phpSniffer.standard": "./phpcs.ruleset.xml",
+
+		"[php]": {
+			"editor.defaultFormatter": "wongjn.php-sniffer",
+			"editor.formatOnSave": true,
+			"editor.formatOnPaste": false,
+		},
 	}
 }

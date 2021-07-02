@@ -1,87 +1,162 @@
 <?php
 
-namespace Avada_Views_Addon;
+namespace Fusion_Views_Addon;
 
 use RuntimeException;
 
 class Views_Counter {
 
-    protected $post_id;
+	/**
+	 * The post id used set/retrieve views.
+	 *
+	 * @var int
+	 */
+	protected $post_id;
 
-    const TOTAL_VIEWS__META_NAME = 'avada_addon_total_views';
-    const TODAY_VIEWS__META_NAME = 'avada_addon_today_views';
-    const TODAY_DATE__META_NAME  = 'avada_addon_today_date_views';
+	const TOTAL_VIEWS__META_NAME = 'fusion_addon_total_views';
+	const TODAY_VIEWS__META_NAME = 'fusion_addon_today_views';
+	const TODAY_DATE__META_NAME  = 'fusion_addon_today_date_views';
 
-    public function __construct( $post_id ) {
-        if ( ! is_numeric($post_id) || $post_id > 0 ) {
-            throw new RuntimeException('Post id is not valid.');
-        }
+	/**
+	 * Construct the function
+	 *
+	 * @throws RuntimeException If the post ID is not valid type.
+	 * @param int|string $post_id The post id to set/retrieve views.
+	 */
+	public function __construct( $post_id ) {
+		if ( ! is_numeric( $post_id ) || ! ( $post_id > 0 ) ) {
+			throw new RuntimeException( 'Post id is not valid.' );
+		}
 
-        $this->$post_id = $post_id;
-    }
+		$this->post_id = (int) $post_id;
+	}
 
-    public function get_total_views_num() {
-        $total_views = get_post_meta( $this->post_id, self::TOTAL_VIEWS__META_NAME, true );
-        if ( ! is_numeric($total_views) ) {
-            $total_views = 0;
-        }
+	/**
+	 * Get a string, representing the total views, formatting to be displayed on
+	 * frontend.
+	 *
+	 * @return int
+	 */
+	public function get_total_views_format_i18n() {
+		return number_format_i18n( $this->get_total_views_num() );
+	}
 
-        return (int) $total_views;
-    }
+	/**
+	 * Get a string, representing the daily/today views, formatting to be
+	 * displayed on frontend.
+	 *
+	 * @return int
+	 */
+	public function get_today_views_format_i18n() {
+		return number_format_i18n( $this->get_today_views_num() );
+	}
 
-    public function get_today_views_num() {
-        if ( ! $this->are_views_stored_from_today() ) {
-            return 0;
-        }
+	/**
+	 * Get an int, representing the today views.
+	 *
+	 * @return int
+	 */
+	public function get_total_views_num() {
+		$total_views = get_post_meta( $this->post_id, self::TOTAL_VIEWS__META_NAME, true );
+		if ( ! is_numeric( $total_views ) ) {
+			$total_views = 0;
+		}
 
-        $today_views = get_post_meta( $this->post_id, self::TODAY_VIEWS__META_NAME, true );
-        if ( ! is_numeric($today_views) ) {
-            $today_views = 0;
-        }
+		return (int) $total_views;
+	}
 
-        return (int) $today_views;
-    }
+	/**
+	 * Get an int, representing the daily/today views.
+	 *
+	 * @return int
+	 */
+	public function get_today_views_num() {
+		if ( ! $this->are_views_stored_from_today() ) {
+			return 0;
+		}
 
-    public static function increase_post_views_on_page_load() {
-        if ( ! is_single() ) {
-            return;
-        }
+		$today_views = get_post_meta( $this->post_id, self::TODAY_VIEWS__META_NAME, true );
+		if ( ! is_numeric( $today_views ) ) {
+			$today_views = 0;
+		}
 
-        global $post;
-        $views_counter = new Views_Counter( $post->ID );
-        $views_counter->increase_post_views();
-    }
+		return (int) $today_views;
+	}
 
-    public function increase_post_views() {
-        $this->increase_total_views();
-        $this->increase_today_views();
-    }
+	/**
+	 * Increases the post views by 1, when a page loads.
+	 *
+	 * Function should be called on a WP action, like 'wp'.
+	 *
+	 * @return void
+	 */
+	public static function increase_post_views_on_page_load() {
+		$is_builder = ( function_exists( 'fusion_is_preview_frame' ) && fusion_is_preview_frame() ) || ( function_exists( 'fusion_is_builder_frame' ) && fusion_is_builder_frame() );
+		if ( ! is_singular() || is_admin() || is_preview() || $is_builder ) {
+			return;
+		}
 
-    protected function increase_total_views() {
-        $total_views = $this->get_total_views_num();
-        $total_views++;
-        update_post_meta($this->post_id, self::TOTAL_VIEWS__META_NAME, $total_views);
-    }
+		global $post;
+		try {
+			$views_counter = new Views_Counter( $post->ID );
+		} catch ( RuntimeException $e ) {
+			return;
+		}
 
-    protected function increase_today_views() {
-        $today_views = $this->get_today_views_num();
-        $today_views++;
-        update_post_meta($this->post_id, self::TODAY_VIEWS__META_NAME, $today_views);
+		$views_counter->increase_post_views();
+	}
 
-        if ( ! $this->are_views_stored_from_today() ) {
-            update_post_meta( $this->post_id, self::TODAY_DATE__META_NAME, date('d-m-Y') );
-        }
-    }
+	/**
+	 * Increase the post views by 1.
+	 *
+	 * @return void
+	 */
+	public function increase_post_views() {
+		$this->increase_total_views();
+		$this->increase_today_views();
+	}
 
-    public function are_views_stored_from_today() {
-        $post_meta_today = get_post_meta( $this->post_id, self::TODAY_DATE__META_NAME, true );
-        $today = date('d-m-Y');
+	/**
+	 * Increase the total views by 1.
+	 *
+	 * @return void
+	 */
+	protected function increase_total_views() {
+		$total_views = $this->get_total_views_num();
+		$total_views++;
+		update_post_meta( $this->post_id, self::TOTAL_VIEWS__META_NAME, $total_views );
+	}
 
-        if ( $today === $post_meta_today ) {
-            return true;
-        }
+	/**
+	 * Increase the daily/today views by 1.
+	 *
+	 * @return void
+	 */
+	protected function increase_today_views() {
+		$today_views = $this->get_today_views_num();
+		$today_views++;
+		update_post_meta( $this->post_id, self::TODAY_VIEWS__META_NAME, $today_views );
 
-        return false;
-    }
+		if ( ! $this->are_views_stored_from_today() ) {
+            // phpcs:ignore WordPress.DateTime -- Date should depend on timezone.
+			update_post_meta( $this->post_id, self::TODAY_DATE__META_NAME, date( 'd-m-Y' ) );
+		}
+	}
+
+	/**
+	 * Check if the daily views date, is today date.
+	 *
+	 * @return bool
+	 */
+	public function are_views_stored_from_today() {
+		$post_meta_today = get_post_meta( $this->post_id, self::TODAY_DATE__META_NAME, true );
+		$today           = date( 'd-m-Y' ); // phpcs:ignore WordPress.DateTime -- Date should depend on timezone.
+
+		if ( $today === $post_meta_today ) {
+			return true;
+		}
+
+		return false;
+	}
 
 }
