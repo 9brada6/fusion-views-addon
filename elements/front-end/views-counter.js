@@ -61,7 +61,7 @@ var FusionPageBuilder = FusionPageBuilder || {};
 			filterTemplateAtts: function( atts ) {
 
 				// Variables we will pass to the template.
-				var templateVariables = {}
+				var templateVariables = {};
 
 				// Validate values.
 				this.validateValues( atts.values );
@@ -88,6 +88,7 @@ var FusionPageBuilder = FusionPageBuilder || {};
 			 * @returns {void}
 			 */
 			validateValues: function( values ) {
+
 				// Note, atts.values is the combination of the defaults and the params.
 			},
 
@@ -102,7 +103,7 @@ var FusionPageBuilder = FusionPageBuilder || {};
 				wrapperAttributes = {
 					id: 'avada-views-addon-wrapper--' + this.cid,
 					class: 'avada-views-addon-wrapper',
-					style: 'color: ' + values.color + '; background-color:' + values.background + ';',
+					style: 'color: ' + values.color + '; background-color:' + values.background + ';'
 				};
 
 				if ( values.content_align && 'auto' !== values.content_align ) {
@@ -135,10 +136,10 @@ var FusionPageBuilder = FusionPageBuilder || {};
 			buildSeparatorAtts: function( values ) {
 				var attr = {};
 
-				if (typeof values.style_type === 'string' || values.style_type instanceof String) {
-					if ( values.style_type.indexOf('double') !== -1 || values.style_type.indexOf('single') !== -1 ) {
-						style = values.style_type.replace(" ", "-");
-						attr['class'] = 'avada-views-addon-decoration avada-views-addon-decoration--' + style;
+				if ( 'string' === typeof values.style_type || values.style_type instanceof String ) {
+					if ( -1 !== values.style_type.indexOf( 'double' ) || -1 !== values.style_type.indexOf( 'single' ) ) {
+						style = values.style_type.replace( ' ', '-' );
+						attr.class = 'avada-views-addon-decoration avada-views-addon-decoration--' + style;
 					}
 				}
 
@@ -151,39 +152,39 @@ var FusionPageBuilder = FusionPageBuilder || {};
 			 * @param {Object} values - The values.
 			 * @returns {Object}
 			 */
-			buildContentAttr: function (values) {
+			buildContentAttr: function( values ) {
 				var attr = {};
 
-				if (typeof values.style_type === 'string' || values.style_type instanceof String) {
-					if ( values.style_type.indexOf('double') !== -1 || values.style_type.indexOf('single') !== -1 ) {
-						attr['style'] = 'display: inline-flex;flex-wrap: wrap;flex-direction: column;';
+				if ( 'string' === typeof values.style_type || values.style_type instanceof String ) {
+					if ( -1 !== values.style_type.indexOf( 'double' ) || -1 !== values.style_type.indexOf( 'single' ) ) {
+						attr.style = 'display: inline-flex;flex-wrap: wrap;flex-direction: column;';
 					}
 				}
 
-				attr['class'] = 'avada-views-addon-content';
+				attr.class = 'avada-views-addon-content';
 
 				return attr;
 			},
 
-			buildCustomStyle: function (values) {
+			buildCustomStyle: function( values ) {
 				var style = '';
 
-				if (typeof values.style_type === 'string' || values.style_type instanceof String) {
-					if ( values.style_type.indexOf('double') !== -1 || values.style_type.indexOf('single') !== -1 ) {
+				if ( 'string' === typeof values.style_type || values.style_type instanceof String ) {
+					if ( -1 !== values.style_type.indexOf( 'double' ) || -1 !== values.style_type.indexOf( 'single' ) ) {
 						if ( values.separator_color ) {
 							style = '#avada-views-addon-wrapper--' + this.cid + ' .avada-views-addon-decoration::before,' +
 							'#avada-views-addon-wrapper--' + this.cid + ' .avada-views-addon-decoration::after{border-color:' + values.separator_color + ';}';
 						}
-					} else if ( values.style_type.indexOf('underline') !== -1 ) {
-						border_styles = values.style_type.split(' ');
+					} else if ( -1 !== values.style_type.indexOf( 'underline' ) ) {
+						borderStyles = values.style_type.split( ' ' );
 
-						border_bottom_color = values.separator_color;
-						if( ! border_bottom_color ) {
-							border_bottom_color = '';
+						borderBottomColor = values.separator_color;
+						if ( ! borderBottomColor ) {
+							borderBottomColor = '';
 						}
 
-						if ( border_styles.length > 0 && ( border_styles[1].includes( 'dashed' ) || border_styles[1].includes( 'dotted' ) || border_styles[1].includes( 'solid' ) ) ) {
-							style = '#avada-views-addon-wrapper--' + this.cid + '.avada-views-addon-wrapper{border-bottom: 1px ' + border_styles[1] + border_bottom_color + ';}';
+						if ( 0 < borderStyles.length && ( borderStyles[1].includes( 'dashed' ) || borderStyles[1].includes( 'dotted' ) || borderStyles[1].includes( 'solid' ) ) ) {
+							style = '#avada-views-addon-wrapper--' + this.cid + '.avada-views-addon-wrapper{border-bottom: 1px ' + borderStyles[1] + borderBottomColor + ';}';
 						}
 					}
 				}

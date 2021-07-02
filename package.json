@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@wordpress/eslint-plugin": "^9.0.6",
+    "eslint": "^7.29.0",
+    "eslint-config-wordpress": "^2.0.0"
+  }
+}
