@@ -112,8 +112,20 @@ var FusionPageBuilder = FusionPageBuilder || {};
 				wrapperAttributes = {
 					id: 'avada-views-addon-wrapper--' + this.cid,
 					class: 'avada-views-addon-wrapper',
-					style: 'color: ' + values.color + '; background-color:' + values.background + ';'
+					style: ''
 				};
+
+				if ( values.class ) {
+					wrapperAttributes.class += ' ' + values.class;
+				}
+
+				if ( values.background ) {
+					wrapperAttributes.style += 'background-color:' + values.background + ';';
+				}
+
+				if ( values.color ) {
+					wrapperAttributes.style += 'color:' + values.color + ';';
+				}
 
 				if ( values.content_align && 'auto' !== values.content_align ) {
 					wrapperAttributes.style += 'text-align:' + values.content_align + ';';

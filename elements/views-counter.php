@@ -66,6 +66,7 @@ if ( fusion_is_element_enabled( 'fusion_views_addon' ) ) {
 					'padding_right'   => '',
 					'padding_top'     => '',
 					'separator_color' => '',
+					'class'           => '',
 				);
 			}
 
@@ -218,6 +219,10 @@ if ( fusion_is_element_enabled( 'fusion_views_addon' ) ) {
 
 				if ( $this->args['padding_right'] ) {
 					$attr['style'] .= 'padding-right:' . $this->args['padding_right'] . ';';
+				}
+
+				if ( $this->args['class'] ) {
+					$attr['class'] .= ' ' . $this->args['class'];
 				}
 
 				return $attr;
@@ -449,6 +454,13 @@ function fusion_views_addon_map() {
 						'param_name'  => 'separator_color',
 						'default'     => '',
 						'group'       => esc_attr__( 'Design', 'fusion-views-addon' ),
+					),
+					array(
+						'type'        => 'textfield',
+						'heading'     => esc_attr__( 'CSS Class', 'fusion-builder' ),
+						'param_name'  => 'class',
+						'value'       => '',
+						'description' => esc_attr__( 'Add a class to the wrapping HTML element.', 'fusion-builder' ),
 					),
 				),
 			)
