@@ -7,6 +7,8 @@
  */
 
 use Fusion_Views_Addon\Views_Counter;
+use function Fusion_Views_Addon\get_fusion_dynamic_data_total_post_views_num;
+use function Fusion_Views_Addon\get_fusion_dynamic_data_today_post_views_num;
 
 if ( fusion_is_element_enabled( 'fusion_views_addon' ) ) {
 
@@ -107,7 +109,10 @@ if ( fusion_is_element_enabled( 'fusion_views_addon' ) ) {
 			 * @return array
 			 */
 			public static function get_element_extras() {
-				return array();
+				return array(
+					'total_views_addon' => get_fusion_dynamic_data_total_post_views_num(),
+					'today_views_addon' => get_fusion_dynamic_data_today_post_views_num(),
+				);
 			}
 
 			/**

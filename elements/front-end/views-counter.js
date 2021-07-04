@@ -23,12 +23,6 @@ var FusionPageBuilder = FusionPageBuilder || {};
 				this.removeTextNodes( decorationWrapper );
 			},
 
-			removeTextNodes: function( el ) {
-				jQuery( el ).contents().filter( function() {
-					return ( 3 == this.nodeType );
-				} ).remove();
-			},
-
 			/**
 			 * Runs before element is removed.
 			 *
@@ -87,7 +81,7 @@ var FusionPageBuilder = FusionPageBuilder || {};
 				templateVariables.separatorAttributes = this.buildSeparatorAtts( atts.values );
 				templateVariables.customStyle = this.buildCustomStyle( atts.values );
 
-				templateVariables.mainContent       = atts.values.element_content;
+				templateVariables.mainContent = this.replaceViews( atts.values.element_content, atts.extras );
 
 				return templateVariables;
 			},
@@ -176,7 +170,7 @@ var FusionPageBuilder = FusionPageBuilder || {};
 			buildSeparatorAtts: function( values ) {
 				var attr = {};
 
-				if ( 'string' === typeof values.style_type || values.style_type instanceof String ) {
+				if ( _.isString( values.style_type ) ) {
 					if ( -1 !== values.style_type.indexOf( 'double' ) || -1 !== values.style_type.indexOf( 'single' ) ) {
 						style = values.style_type.replace( ' ', '-' );
 						attr.class = 'avada-views-addon-decoration avada-views-addon-decoration--' + style;
@@ -195,7 +189,7 @@ var FusionPageBuilder = FusionPageBuilder || {};
 			buildContentAttr: function( values ) {
 				var attr = {};
 
-				if ( 'string' === typeof values.style_type || values.style_type instanceof String ) {
+				if ( _.isString( values.style_type ) ) {
 					if ( -1 !== values.style_type.indexOf( 'double' ) || -1 !== values.style_type.indexOf( 'single' ) ) {
 						attr.style = 'display: inline-flex;flex-wrap: wrap;flex-direction: column;';
 					}
@@ -209,7 +203,7 @@ var FusionPageBuilder = FusionPageBuilder || {};
 			buildCustomStyle: function( values ) {
 				var style = '';
 
-				if ( 'string' === typeof values.style_type || values.style_type instanceof String ) {
+				if ( _.isString( values.style_type ) ) {
 					if ( -1 !== values.style_type.indexOf( 'double' ) || -1 !== values.style_type.indexOf( 'single' ) ) {
 						if ( values.separator_color ) {
 							style = '#avada-views-addon-wrapper--' + this.cid + ' .avada-views-addon-decoration::before,' +
@@ -230,6 +224,23 @@ var FusionPageBuilder = FusionPageBuilder || {};
 				}
 
 				return style;
+			},
+
+			removeTextNodes: function( el ) {
+				jQuery( el ).contents().filter( function() {
+					return ( 3 == this.nodeType );
+				} ).remove();
+			},
+
+			replaceViews: function( content, extras ) {
+				var totalViews = /%total_views%/gi;
+				var todayViews = /%today_views%/gi;
+
+				if ( _.isString( content ) ) {
+					content = content.replace( totalViews, extras.total_views_addon );
+					content = content.replace( todayViews, extras.today_views_addon );
+				}
+				return content;
 			}
 
 		} );

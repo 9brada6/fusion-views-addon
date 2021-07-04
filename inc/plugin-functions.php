@@ -81,15 +81,8 @@ function add_today_views_count_to_fusion_builder_dynamic_data( $dynamic_data ) {
  * @return string
  */
 function get_fusion_dynamic_data_total_post_views() {
-	if ( ! is_callable( Fusion_Dynamic_Data_Callbacks::class, 'get_post_id' ) ) {
-		return '';
-	}
-
-	$post_id = Fusion_Dynamic_Data_Callbacks::get_post_id();
-
-	try {
-		$views_class = new Views_Counter( $post_id );
-	} catch ( RuntimeException $e ) {
+	$views_class = get_fusion_dynamic_data_post_views_obj();
+	if ( false === $views_class ) {
 		return '';
 	}
 
@@ -103,20 +96,29 @@ function get_fusion_dynamic_data_total_post_views() {
 }
 
 /**
+ * Retrieve the total views number of a post to fusion dynamic data.
+ *
+ * @return string
+ */
+function get_fusion_dynamic_data_total_post_views_num() {
+	$views_class = get_fusion_dynamic_data_post_views_obj();
+	if ( false === $views_class ) {
+		return '';
+	}
+
+	$views_num = $views_class->get_total_views_num();
+
+	return $views_num;
+}
+
+/**
  * Retrieve the today views of a post to fusion dynamic data.
  *
  * @return string
  */
 function get_fusion_dynamic_data_today_post_views() {
-	if ( ! is_callable( Fusion_Dynamic_Data_Callbacks::class, 'get_post_id' ) ) {
-		return '';
-	}
-
-	$post_id = Fusion_Dynamic_Data_Callbacks::get_post_id();
-
-	try {
-		$views_class = new Views_Counter( $post_id );
-	} catch ( RuntimeException $e ) {
+	$views_class = get_fusion_dynamic_data_post_views_obj();
+	if ( false === $views_class ) {
 		return '';
 	}
 
@@ -127,6 +129,43 @@ function get_fusion_dynamic_data_today_post_views() {
 	$views_text = sprintf( _n( '%s Today Visitor', '%s Today Visitors', $views_num, 'fusion-views-addon' ), $views_formatted );
 
 	return $views_text;
+}
+
+/**
+ * Retrieve the today views of a post to fusion dynamic data.
+ *
+ * @return string
+ */
+function get_fusion_dynamic_data_today_post_views_num() {
+	$views_class = get_fusion_dynamic_data_post_views_obj();
+	if ( false === $views_class ) {
+		return '';
+	}
+
+	$views_num = $views_class->get_today_views_num();
+
+	return $views_num;
+}
+
+/**
+ * Retrieve the today views of a post to fusion dynamic data.
+ *
+ * @return false|Views_Counter
+ */
+function get_fusion_dynamic_data_post_views_obj() {
+	if ( ! is_callable( Fusion_Dynamic_Data_Callbacks::class, 'get_post_id' ) ) {
+		return false;
+	}
+
+	$post_id = Fusion_Dynamic_Data_Callbacks::get_post_id();
+
+	try {
+		$views_class = new Views_Counter( $post_id );
+	} catch ( RuntimeException $e ) {
+		return false;
+	}
+
+	return $views_class;
 }
 
 #endregion -- Add to fusion dynamic data.
