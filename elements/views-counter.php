@@ -86,6 +86,17 @@ if ( fusion_is_element_enabled( 'fusion_views_addon' ) ) {
 			}
 
 			/**
+			 * Check if component should render
+			 *
+			 * @access public
+			 * @since 2.4
+			 * @return boolean
+			 */
+			public function should_render() {
+				return is_singular();
+			}
+
+			/**
 			 * Used to set any other variables for use on front-end editor template.
 			 *
 			 * @static
@@ -350,47 +361,43 @@ function fusion_views_addon_map() {
 						'value'        => $fusion_settings->get( 'fusion_addon_views_content' ) ? $fusion_settings->get( 'fusion_addon_views_content' ) : esc_attr__( 'Total views: %total_views%. Daily views: %today_views%', 'fusion-views-addon' ),
 					),
 					array(
-						'type'         => 'textfield',
-						'heading'      => esc_attr__( 'Font Size', 'fusion-builder' ),
+						'type'        => 'textfield',
+						'heading'     => esc_attr__( 'Font Size', 'fusion-builder' ),
 						/* translators: URL for the link. */
-						'description'  => sprintf( esc_html__( 'Controls the font size of the text. Enter value including any valid CSS unit, ex: 20px. Leave empty if the global font size for the corresponding heading size (h1-h6) should be used: %s.', 'fusion-builder' ), $to_link ),
-						'param_name'   => 'font_size',
-						'value'        => '',
-						'dynamic_data' => true,
-						'group'        => esc_attr__( 'Design', 'fusion-builder' ),
+						'description' => sprintf( esc_html__( 'Controls the font size of the text. Enter value including any valid CSS unit, ex: 20px. Leave empty if the global font size for the corresponding heading size (h1-h6) should be used: %s.', 'fusion-builder' ), $to_link ),
+						'param_name'  => 'font_size',
+						'value'       => '',
+						'group'       => esc_attr__( 'Design', 'fusion-builder' ),
 					),
 					array(
-						'type'         => 'colorpickeralpha',
-						'heading'      => esc_attr__( 'Text Color', 'fusion-views-addon' ),
-						'description'  => esc_attr__( 'Set the text color.', 'fusion-views-addon' ),
-						'param_name'   => 'color',
-						'default'      => $fusion_settings->get( 'fusion_addon_views_color' ) ? $fusion_settings->get( 'fusion_addon_views_color' ) : '',
-						'dynamic_data' => true,
-						'group'        => esc_attr__( 'Design', 'fusion-views-addon' ),
+						'type'        => 'colorpickeralpha',
+						'heading'     => esc_attr__( 'Text Color', 'fusion-views-addon' ),
+						'description' => esc_attr__( 'Set the text color.', 'fusion-views-addon' ),
+						'param_name'  => 'color',
+						'default'     => $fusion_settings->get( 'fusion_addon_views_color' ) ? $fusion_settings->get( 'fusion_addon_views_color' ) : '',
+						'group'       => esc_attr__( 'Design', 'fusion-views-addon' ),
 					),
 					array(
-						'type'         => 'colorpickeralpha',
-						'heading'      => esc_attr__( 'Background Color', 'fusion-views-addon' ),
-						'description'  => esc_attr__( 'Set the background color.', 'fusion-views-addon' ),
-						'param_name'   => 'background',
-						'default'      => $fusion_settings->get( 'fusion_addon_views_background_color' ) ? $fusion_settings->get( 'fusion_addon_views_background_color' ) : '',
-						'group'        => esc_attr__( 'Design', 'fusion-views-addon' ),
-						'dynamic_data' => true,
+						'type'        => 'colorpickeralpha',
+						'heading'     => esc_attr__( 'Background Color', 'fusion-views-addon' ),
+						'description' => esc_attr__( 'Set the background color.', 'fusion-views-addon' ),
+						'param_name'  => 'background',
+						'default'     => $fusion_settings->get( 'fusion_addon_views_background_color' ) ? $fusion_settings->get( 'fusion_addon_views_background_color' ) : '',
+						'group'       => esc_attr__( 'Design', 'fusion-views-addon' ),
 					),
 					array(
-						'type'         => 'radio_button_set',
-						'heading'      => esc_attr__( 'Alignment', 'fusion-views-addon' ),
-						'description'  => esc_attr__( 'Choose to align the heading left, right or center.', 'fusion-views-addon' ),
-						'param_name'   => 'content_align',
-						'value'        => array(
+						'type'        => 'radio_button_set',
+						'heading'     => esc_attr__( 'Alignment', 'fusion-views-addon' ),
+						'description' => esc_attr__( 'Choose to align the heading left, right or center.', 'fusion-views-addon' ),
+						'param_name'  => 'content_align',
+						'value'       => array(
 							'auto'   => esc_attr__( 'Language Default', 'fusion-views-addon' ),
 							'left'   => esc_attr__( 'Left', 'fusion-views-addon' ),
 							'center' => esc_attr__( 'Center', 'fusion-views-addon' ),
 							'right'  => esc_attr__( 'Right', 'fusion-views-addon' ),
 						),
-						'default'      => 'auto',
-						'group'        => esc_attr__( 'Design', 'fusion-views-addon' ),
-						'dynamic_data' => true,
+						'default'     => 'auto',
+						'group'       => esc_attr__( 'Design', 'fusion-views-addon' ),
 					),
 					array(
 						'type'             => 'dimension',
@@ -398,7 +405,6 @@ function fusion_views_addon_map() {
 						'heading'          => esc_attr__( 'Padding', 'fusion-views-addon' ),
 						'description'      => esc_attr__( 'In pixels or percentage, ex: 10px or 10%.', 'fusion-views-addon' ),
 						'param_name'       => 'padding',
-						'dynamic_data'     => true,
 						'value'            => array(
 							'padding_top'    => '',
 							'padding_right'  => '',
@@ -408,11 +414,11 @@ function fusion_views_addon_map() {
 						'group'            => esc_attr__( 'Design', 'fusion-views-addon' ),
 					),
 					array(
-						'type'         => 'select',
-						'heading'      => esc_attr__( 'Separator', 'fusion-views-addon' ),
-						'description'  => esc_attr__( 'Choose the kind of the title separator you want to use.', 'fusion-views-addon' ),
-						'param_name'   => 'style_type',
-						'value'        => array(
+						'type'        => 'select',
+						'heading'     => esc_attr__( 'Separator', 'fusion-views-addon' ),
+						'description' => esc_attr__( 'Choose the kind of the title separator you want to use.', 'fusion-views-addon' ),
+						'param_name'  => 'style_type',
+						'value'       => array(
 							'none'             => esc_attr__( 'None', 'fusion-views-addon' ),
 							'single solid'     => esc_attr__( 'Single Solid', 'fusion-views-addon' ),
 							'single dashed'    => esc_attr__( 'Single Dashed', 'fusion-views-addon' ),
@@ -424,18 +430,16 @@ function fusion_views_addon_map() {
 							'underline dashed' => esc_attr__( 'Underline Dashed', 'fusion-views-addon' ),
 							'underline dotted' => esc_attr__( 'Underline Dotted', 'fusion-views-addon' ),
 						),
-						'default'      => 'none',
-						'dynamic_data' => true,
-						'group'        => esc_attr__( 'Design', 'fusion-views-addon' ),
+						'default'     => 'none',
+						'group'       => esc_attr__( 'Design', 'fusion-views-addon' ),
 					),
 					array(
-						'type'         => 'colorpickeralpha',
-						'heading'      => esc_attr__( 'Separator Color', 'fusion-views-addon' ),
-						'description'  => esc_attr__( 'Defaults to text color.', 'fusion-views-addon' ),
-						'param_name'   => 'separator_color',
-						'default'      => '',
-						'dynamic_data' => true,
-						'group'        => esc_attr__( 'Design', 'fusion-views-addon' ),
+						'type'        => 'colorpickeralpha',
+						'heading'     => esc_attr__( 'Separator Color', 'fusion-views-addon' ),
+						'description' => esc_attr__( 'Defaults to text color.', 'fusion-views-addon' ),
+						'param_name'  => 'separator_color',
+						'default'     => '',
+						'group'       => esc_attr__( 'Design', 'fusion-views-addon' ),
 					),
 				),
 			)
