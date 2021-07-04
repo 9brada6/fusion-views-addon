@@ -56,8 +56,11 @@ var FusionPageBuilder = FusionPageBuilder || {};
 			afterPatch: function() {
 				var $thisElement = jQuery( '#fb-preview' )[0].contentWindow.jQuery( this.$el );
 
-				// Try console logging the element, you can do custom init here for example.
-				// console.log( $thisElement );
+				var decorationWrapper = $thisElement.find( '.avada-views-addon-decoration' );
+
+				// The empty text nodes are removed between the HTML tags because
+				// they add space when displaying inline-block.
+				this.removeTextNodes( decorationWrapper );
 			},
 
 			/**
@@ -109,11 +112,11 @@ var FusionPageBuilder = FusionPageBuilder || {};
 			 * @returns {Object}
 			 */
 			buildWrapperAtts: function( values ) {
-				wrapperAttributes = {
+				var wrapperAttributes         = _.fusionVisibilityAtts( values.hide_on_mobile, {
 					id: 'avada-views-addon-wrapper--' + this.cid,
 					class: 'avada-views-addon-wrapper',
 					style: ''
-				};
+				} );
 
 				if ( values.class ) {
 					wrapperAttributes.class += ' ' + values.class;

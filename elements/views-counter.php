@@ -56,6 +56,7 @@ if ( fusion_is_element_enabled( 'fusion_views_addon' ) ) {
 
 				return array(
 					'element_content' => $fusion_settings->get( 'fusion_addon_views_content' ),
+					'hide_on_mobile'  => fusion_builder_default_visibility( 'string' ),
 					'font_size'       => '',
 					'color'           => $fusion_settings->get( 'fusion_addon_views_color' ),
 					'background'      => $fusion_settings->get( 'fusion_addon_views_background_color' ),
@@ -182,11 +183,13 @@ if ( fusion_is_element_enabled( 'fusion_views_addon' ) ) {
 			 * @return array
 			 */
 			public function attr( $attr ) {
-
-				$attr = array(
-					'id'    => $attr['id'],
-					'class' => 'avada-views-addon-wrapper',
-					'style' => '',
+				$attr = fusion_builder_visibility_atts(
+					$this->args['hide_on_mobile'],
+					array(
+						'id'    => $attr['id'],
+						'class' => 'avada-views-addon-wrapper',
+						'style' => '',
+					)
 				);
 
 				if ( $this->args['color'] ) {
@@ -481,11 +484,19 @@ function fusion_views_addon_map() {
 						'group'       => esc_attr__( 'Design', 'fusion-views-addon' ),
 					),
 					array(
+						'type'        => 'checkbox_button_set',
+						'heading'     => esc_attr__( 'Element Visibility', 'fusion-views-addon' ),
+						'param_name'  => 'hide_on_mobile',
+						'value'       => fusion_builder_visibility_options( 'full' ),
+						'default'     => fusion_builder_default_visibility( 'array' ),
+						'description' => esc_attr__( 'Choose to show or hide the element on small, medium or large screens. You can choose more than one at a time.', 'fusion-views-addon' ),
+					),
+					array(
 						'type'        => 'textfield',
-						'heading'     => esc_attr__( 'CSS Class', 'fusion-builder' ),
+						'heading'     => esc_attr__( 'CSS Class', 'fusion-views-addon' ),
 						'param_name'  => 'class',
 						'value'       => '',
-						'description' => esc_attr__( 'Add a class to the wrapping HTML element.', 'fusion-builder' ),
+						'description' => esc_attr__( 'Add a class to the wrapping HTML element.', 'fusion-views-addon' ),
 					),
 				),
 			)
