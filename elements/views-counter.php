@@ -221,6 +221,22 @@ if ( fusion_is_element_enabled( 'fusion_views_addon' ) ) {
 					$attr['style'] .= 'padding-right:' . $this->args['padding_right'] . ';';
 				}
 
+				if ( $this->args['margin_top'] ) {
+					$attr['style'] .= 'margin-top:' . $this->args['margin_top'] . ';';
+				}
+
+				if ( $this->args['margin_bottom'] ) {
+					$attr['style'] .= 'margin-bottom:' . $this->args['margin_bottom'] . ';';
+				}
+
+				if ( $this->args['margin_left'] ) {
+					$attr['style'] .= 'margin-left:' . $this->args['margin_left'] . ';';
+				}
+
+				if ( $this->args['margin_right'] ) {
+					$attr['style'] .= 'margin-right:' . $this->args['margin_right'] . ';';
+				}
+
 				if ( $this->args['class'] ) {
 					$attr['class'] .= ' ' . $this->args['class'];
 				}
@@ -426,6 +442,15 @@ function fusion_views_addon_map() {
 							'padding_left'   => '',
 						),
 						'group'            => esc_attr__( 'Design', 'fusion-views-addon' ),
+					),
+					'fusion_margin_placeholder' => array(
+						'param_name' => 'margin',
+						'value'      => array(
+							'margin_top'    => '',
+							'margin_right'  => '',
+							'margin_bottom' => '',
+							'margin_left'   => '',
+						),
 					),
 					array(
 						'type'        => 'select',

@@ -151,6 +151,22 @@ var FusionPageBuilder = FusionPageBuilder || {};
 					wrapperAttributes.style += 'padding-right:' + values.padding_right + ';';
 				}
 
+				if ( values.margin_top ) {
+					wrapperAttributes.style += 'margin-top:' + values.margin_top + ';';
+				}
+
+				if ( values.margin_bottom ) {
+					wrapperAttributes.style += 'margin-bottom:' + values.margin_bottom + ';';
+				}
+
+				if ( values.margin_left ) {
+					wrapperAttributes.style += 'margin-left:' + values.margin_left + ';';
+				}
+
+				if ( values.margin_right ) {
+					wrapperAttributes.style += 'margin-right:' + values.margin_right + ';';
+				}
+
 				return wrapperAttributes;
 			},
 
