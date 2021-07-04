@@ -16,8 +16,17 @@ var FusionPageBuilder = FusionPageBuilder || {};
 			onRender: function() {
 				var $thisElement = jQuery( '#fb-preview' )[0].contentWindow.jQuery( this.$el );
 
-				// Try console logging the element, you can do custom init here for example.
-				// console.log( $thisElement );
+				var decorationWrapper = $thisElement.find( '.avada-views-addon-decoration' );
+
+				// The empty text nodes are removed between the HTML tags because
+				// they add space when displaying inline-block.
+				this.removeTextNodes( decorationWrapper );
+			},
+
+			removeTextNodes: function( el ) {
+				jQuery( el ).contents().filter( function() {
+					return ( 3 == this.nodeType );
+				} ).remove();
 			},
 
 			/**
