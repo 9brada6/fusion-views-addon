@@ -24,6 +24,8 @@
 		<exclude name="Squiz.Commenting.FileComment.Missing" />
 		<exclude name="Squiz.Commenting.FileComment.MissingPackageTag" />
 		<exclude name="Squiz.Commenting.ClassComment.Missing" />
+		<exclude name="Squiz.Commenting.InlineComment.WrongStyle" />
+
 
 		<exclude name="Generic.Commenting.Fixme.CommentFound" />
 		<exclude name="Generic.Commenting.Fixme.TaskFound" />

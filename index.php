@@ -34,6 +34,7 @@ if ( ! class_exists( 'Fusion_Views_Addon' ) ) {
 
 if ( ! class_exists( Views_Counter::class ) ) {
 	include_once wp_normalize_path( FUSION_VIEWS_ADDON_PLUGIN_DIR . '/inc/class-views-counter.php' );
+	include_once wp_normalize_path( FUSION_VIEWS_ADDON_PLUGIN_DIR . '/inc/plugin-functions.php' );
 
 	add_action( 'wp', array( Views_Counter::class, 'increase_post_views_on_page_load' ) );
 }
