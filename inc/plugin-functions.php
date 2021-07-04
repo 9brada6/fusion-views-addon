@@ -32,11 +32,11 @@ function add_views_count_to_fusion_builder_dynamic_data( $dynamic_data ) {
 	}
 
 	$dynamic_data['fusion_views_addon'] = array(
-		'label'    => esc_html__( 'Today post views', 'fusion-builder' ),
+		'label'    => esc_html__( 'Total post views', 'fusion-builder' ),
 		'id'       => 'fusion_views_addon',
 		'group'    => $group,
 		'callback' => array(
-			'function' => 'Fusion_Views_Addon\\get_fusion_dynamic_data_post_views',
+			'function' => 'Fusion_Views_Addon\\get_fusion_dynamic_data_total_post_views',
 			'ajax'     => false,
 		),
 	);
@@ -49,7 +49,7 @@ function add_views_count_to_fusion_builder_dynamic_data( $dynamic_data ) {
  *
  * @return string
  */
-function get_fusion_dynamic_data_post_views() {
+function get_fusion_dynamic_data_total_post_views() {
 	if ( ! is_callable( Fusion_Dynamic_Data_Callbacks::class, 'get_post_id' ) ) {
 		return '';
 	}
@@ -63,10 +63,9 @@ function get_fusion_dynamic_data_post_views() {
 	}
 
 	$views_formatted = $views_class->get_total_views_format_i18n();
-	$views_num       = $views_class->get_total_views_num();
 
 	/* translators: %s - will be replaced with the number of views. */
-	$views_text = sprintf( _n( '%s View', '%s Views', $views_num, 'fusion-views-addon' ), $views_formatted );
+	$views_text = sprintf( __( '%s Total Visitors', 'fusion-views-addon' ), $views_formatted );
 
 	return $views_text;
 }

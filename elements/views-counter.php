@@ -177,6 +177,7 @@ if ( fusion_is_element_enabled( 'fusion_views_addon' ) ) {
 			 *
 			 * @access public
 			 * @since 1.0
+			 * @param array $attr The initial attributes.
 			 * @return array
 			 */
 			public function attr( $attr ) {
@@ -184,8 +185,16 @@ if ( fusion_is_element_enabled( 'fusion_views_addon' ) ) {
 				$attr = array(
 					'id'    => $attr['id'],
 					'class' => 'avada-views-addon-wrapper',
-					'style' => 'color: ' . $this->args['color'] . '; background-color:' . $this->args['background'] . ';',
+					'style' => '',
 				);
+
+				if ( $this->args['color'] ) {
+					$attr['style'] .= 'color:' . $this->args['color'] . ';';
+				}
+
+				if ( $this->args['background'] ) {
+					$attr['style'] .= 'background-color:' . $this->args['background'] . ';';
+				}
 
 				if ( $this->args['content_align'] && 'auto' !== $this->args['content_align'] ) {
 					$attr['style'] .= 'text-align:' . $this->args['content_align'] . ';';
