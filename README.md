@@ -1,7 +1,7 @@
 By default, all the metas are hold in a post meta individually. I choose this because:
-- They are fetched by default when a post(single page) is shown, so no additional database calls.
-- We can easily retrieve the order of posts by total_views/daily_views if needed(To display most viewed posts).
-- If we want to register users by {hash_ip, date, post_id} views in a table, for statistic data in the future, these meta are still needed.
+a) They are fetched by default when a post(single page) is shown, so no additional database calls.
+b) We can easily retrieve the order of posts by total_views/daily_views if needed(To display most viewed posts).
+c) If we want to register users by {hash_ip, date, post_id} views in a table, for statistic data in the future, these meta are still needed.
 
 I didn't tried figure out how to use dynamic_css(), so I just put in render a <style></style>. I know it's wrong, but also maybe dynamic_css() function isn't for echoeing <style>? I didn't try to see exactly what that function is tying to do tho.
 
