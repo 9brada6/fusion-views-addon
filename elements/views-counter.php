@@ -68,6 +68,10 @@ if ( fusion_is_element_enabled( 'fusion_views_addon' ) ) {
 					'padding_left'    => '',
 					'padding_right'   => '',
 					'padding_top'     => '',
+					'margin_bottom'   => '',
+					'margin_left'     => '',
+					'margin_right'    => '',
+					'margin_top'      => '',
 					'separator_color' => '',
 					'class'           => '',
 				);
