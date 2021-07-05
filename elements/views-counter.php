@@ -57,23 +57,34 @@ if ( fusion_is_element_enabled( 'fusion_views_addon' ) ) {
 				$fusion_settings = fusion_get_fusion_settings();
 
 				return array(
-					'element_content' => $fusion_settings->get( 'fusion_addon_views_content' ),
-					'hide_on_mobile'  => fusion_builder_default_visibility( 'string' ),
-					'font_size'       => '',
-					'color'           => $fusion_settings->get( 'fusion_addon_views_color' ),
-					'background'      => $fusion_settings->get( 'fusion_addon_views_background_color' ),
-					'content_align'   => 'auto',
-					'style_type'      => 'none',
-					'padding_bottom'  => '',
-					'padding_left'    => '',
-					'padding_right'   => '',
-					'padding_top'     => '',
-					'margin_bottom'   => '',
-					'margin_left'     => '',
-					'margin_right'    => '',
-					'margin_top'      => '',
-					'separator_color' => '',
-					'class'           => '',
+					'element_content'       => $fusion_settings->get( 'fusion_addon_views_content' ),
+					'hide_on_mobile'        => fusion_builder_default_visibility( 'string' ),
+					'font_size'             => '',
+					'color'                 => $fusion_settings->get( 'fusion_addon_views_color' ),
+					'background'            => $fusion_settings->get( 'fusion_addon_views_background_color' ),
+					'content_align'         => 'auto',
+					'style_type'            => 'none',
+					'padding_bottom'        => '',
+					'padding_left'          => '',
+					'padding_right'         => '',
+					'padding_top'           => '',
+					'margin_bottom'         => '',
+					'margin_left'           => '',
+					'margin_right'          => '',
+					'margin_top'            => '',
+					'border_radius'         => '',
+
+					// Box-shadow.
+					'box_shadow'            => '',
+					'box_shadow_blur'       => '',
+					'box_shadow_color'      => '',
+					'box_shadow_horizontal' => '',
+					'box_shadow_spread'     => '',
+					'box_shadow_style'      => '',
+					'box_shadow_vertical'   => '',
+
+					'separator_color'       => '',
+					'class'                 => '',
 				);
 			}
 
@@ -247,6 +258,24 @@ if ( fusion_is_element_enabled( 'fusion_views_addon' ) ) {
 
 				if ( $this->args['margin_right'] ) {
 					$attr['style'] .= 'margin-right:' . $this->args['margin_right'] . ';';
+				}
+
+				if ( $this->args['border_radius'] ) {
+					$attr['style'] .= 'border-radius:' . $this->args['border_radius'] . ';';
+				}
+
+				if ( 'yes' === $this->args['box_shadow'] ) {
+					$attr['style'] .= 'box-shadow:';
+					$attr['style'] .= Fusion_Builder_Box_Shadow_Helper::get_box_shadow_styles(
+						array(
+							'box_shadow_horizontal' => $this->args['box_shadow_horizontal'],
+							'box_shadow_vertical'   => $this->args['box_shadow_vertical'],
+							'box_shadow_blur'       => $this->args['box_shadow_blur'],
+							'box_shadow_spread'     => $this->args['box_shadow_spread'],
+							'box_shadow_color'      => $this->args['box_shadow_color'],
+							'box_shadow_style'      => $this->args['box_shadow_style'],
+						)
+					);
 				}
 
 				if ( $this->args['class'] ) {
@@ -455,7 +484,7 @@ function fusion_views_addon_map() {
 						),
 						'group'            => esc_attr__( 'Design', 'fusion-views-addon' ),
 					),
-					'fusion_margin_placeholder' => array(
+					'fusion_margin_placeholder'     => array(
 						'param_name' => 'margin',
 						'value'      => array(
 							'margin_top'    => '',
@@ -464,6 +493,15 @@ function fusion_views_addon_map() {
 							'margin_left'   => '',
 						),
 					),
+					array(
+						'type'        => 'textfield',
+						'heading'     => esc_attr__( 'Border Radius', 'fusion-builder' ),
+						'description' => esc_attr__( 'Controls the image border radius. In pixels (px), ex: 1px, or "round". ', 'fusion-builder' ),
+						'param_name'  => 'border_radius',
+						'value'       => '',
+						'group'       => esc_attr__( 'Design', 'fusion-views-addon' ),
+					),
+					'fusion_box_shadow_placeholder' => array(),
 					array(
 						'type'        => 'select',
 						'heading'     => esc_attr__( 'Separator', 'fusion-views-addon' ),

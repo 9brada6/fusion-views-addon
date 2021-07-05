@@ -164,6 +164,14 @@ var FusionPageBuilder = FusionPageBuilder || {};
 					wrapperAttributes.style += 'margin-right:' + values.margin_right + ';';
 				}
 
+				if ( values.border_radius ) {
+					wrapperAttributes.style += 'border-radius:' + values.border_radius + ';';
+				}
+
+				if ( 'yes' === values.box_shadow ) {
+					wrapperAttributes.style += 'box-shadow:' + _.fusionGetBoxShadowStyle( values ).replace( ';', '' ) + ' !important;';
+				}
+
 				return wrapperAttributes;
 			},
 
